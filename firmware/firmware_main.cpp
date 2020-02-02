@@ -124,17 +124,23 @@ void scanMatrix() {
   }
 };
 
+static uint16_t previousConsumerReport = 0;
 
 /**************************************************************************************************************************/
 // Communication with computer and other boards
 /**************************************************************************************************************************/
 void sendKeyPresses() {
-   KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport  
+   KeyScanner::getReport(previousConsumerReport);                                            // get state data - Data is in KeyScanner::currentReport  
    if (!(KeyScanner::reportChanged))  //any new key presses anywhere?
    {                                                                              
         sendKeys(KeyScanner::currentReport);
         isReportedReleased = false;
         LOG_LV1("MXSCAN","SEND: %i %i %i %i %i %i %i %i %i " ,millis(),KeyScanner::currentReport[0], KeyScanner::currentReport[1],KeyScanner::currentReport[2],KeyScanner::currentReport[3], KeyScanner::currentReport[4],KeyScanner::currentReport[5], KeyScanner::currentReport[6],KeyScanner::currentReport[7] );        
+    }
+    if (KeyScanner::consumerReportChanged) {
+      LOG_LV1("MXSCAN","SEND CONSUMER: %i %i" ,millis(),KeyScanner::consumerReport );        
+
+      sendConsumerKeys(KeyScanner::consumerReport);
     }
  /*  else                                                                  //NO key presses anywhere
    {
@@ -190,7 +196,7 @@ void keyscantimer_callback(TimerHandle_t _handle) {
     #endif
   if (monitoring_state == STATE_BOOT_MODE)
   {
-      KeyScanner::getReport();                                            // get state data - Data is in KeyScanner::currentReport
+      KeyScanner::getReport(previousConsumerReport);                                            // get state data - Data is in KeyScanner::currentReport
       if (!(KeyScanner::reportChanged))
       {
         for (int i = 0; i < BOOT_MODE_COMMANDS_COUNT; ++i)          // loop through BOOT_MODE_COMMANDS and compare with the first key being pressed - assuming only 1 key will be pressed when in boot mode.

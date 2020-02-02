@@ -118,6 +118,7 @@ void KeyScanner::resetReport() {
     currentReport[4] = 0;
     currentReport[5] = 0;
     currentReport[6] = 0;
+    consumerReport = 0;
 }
 
 
@@ -271,7 +272,7 @@ bool KeyScanner::updateModifiers()
     for (auto keycode : activeKeys)
     {
         //seperate the keycode into the hid keycode and the additional modifiers
-        auto extraModifiers = static_cast<uint8_t>((keycode & 0xFF00) >> 8);
+        auto extraModifiers = static_cast<uint8_t>((keycode & ~CON_MASK & 0xFF00) >> 8);
         auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
 
         //check if the hid keycode contains a modifier
@@ -296,7 +297,7 @@ bool KeyScanner::updateModifiers()
 
 /**************************************************************************************************************************/
 
-bool KeyScanner::getReport()
+bool KeyScanner::getReport(uint16_t& previousConsumerReport)
 {
     resetReport();
     copyRemoteReport();
@@ -305,12 +306,16 @@ bool KeyScanner::getReport()
 
     for (auto keycode : activeKeys) 
     {
-        auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
-
-        if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)
-        {
-            currentReport[bufferposition] = hidKeycode;
-            ++bufferposition;
+        if (keycode & CON_MASK) {
+            // A consumer report can only contain one key, just overwrite and keep the last one.
+            consumerReport = keycode & ~CON_MASK;
+        } else {
+            auto hidKeycode = static_cast<uint8_t>(keycode & 0x00FF);
+            if (hidKeycode >= KC_A && hidKeycode <= KC_EXSEL)
+            {
+                currentReport[bufferposition] = hidKeycode;
+                ++bufferposition;
+            }
         }
 
         if (bufferposition == 7)
@@ -334,6 +339,8 @@ bool KeyScanner::getReport()
     else
     {reportChanged = true;}
 
+    consumerReportChanged = consumerReport != previousConsumerReport;
+
     previousReport[0] = currentReport[0];
     previousReport[1] = currentReport[1];
     previousReport[2] = currentReport[2];
@@ -342,6 +349,7 @@ bool KeyScanner::getReport()
     previousReport[5] = currentReport[5];
     previousReport[6] = currentReport[6];
     previousReport[7] = currentReport[7];
+    previousConsumerReport = consumerReport;
 
     return reportChanged;
 }
@@ -354,10 +362,12 @@ unsigned long KeyScanner::getLastPressed()
 
 
 uint8_t KeyScanner::currentReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0}; 
+uint16_t KeyScanner::consumerReport = 0;
 uint8_t KeyScanner::remoteReport[8]  = {0, 0, 0 ,0, 0, 0, 0, 0}; 
 uint8_t KeyScanner::previousReport[8] = {0, 0, 0 ,0, 0, 0, 0, 0};
 bool    KeyScanner::layerChanged = false;
 bool    KeyScanner::reportChanged = true;
+bool    KeyScanner::consumerReportChanged = false;
 uint8_t KeyScanner::localLayer = 0;
 uint8_t KeyScanner::remoteLayer = 0;
 uint8_t KeyScanner::remoteMod = 0;

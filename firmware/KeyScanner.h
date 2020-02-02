@@ -39,13 +39,15 @@ class KeyScanner {
         static bool scanMatrix(const int& currentState,unsigned long millis, const int& row, const int& col);
         static void updateRemoteReport(uint8_t data0 , uint8_t data1, uint8_t data2,uint8_t data3, uint8_t data4, uint8_t data5,uint8_t data6);
         static void updateRemoteLayer(uint8_t data0);
-        static bool getReport();
+        static bool getReport(uint16_t& previousConsumerReport);
         static unsigned long getLastPressed();
         static bool layerChanged;
         static bool reportChanged;
+        static bool consumerReportChanged;
         static uint8_t localLayer;
         static uint8_t layerMode;
         static uint8_t currentReport[8];
+        static uint16_t consumerReport;
 
     private:
         static void resetReport();

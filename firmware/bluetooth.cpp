@@ -412,6 +412,13 @@ void sendKeys(uint8_t currentReport[8])
          ; // Only send layer to slaves - send nothing here
     #endif 
 }
+void sendConsumerKeys(uint16_t consumerReport)
+{
+#if BLE_HID == 1  
+    blehid.consumerReport(hid_conn_hdl, consumerReport); 
+#endif
+}
+
 /**************************************************************************************************************************/
 void sendRelease(uint8_t currentReport[8])
 {

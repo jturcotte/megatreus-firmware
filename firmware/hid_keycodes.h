@@ -381,7 +381,70 @@ enum hid_keyboard_keypad_usage {
 #define LAYER_E      0xFE
 #define LAYER_F      0xFF
 
+/// HID Usage Table: Consumer Page (0x0C)
+/// Only contains controls that supported by Windows (whole list is too long)
+enum
+{
+  // Generic Control
+  CONSUMER_CONTROL                           = 0x0001,
 
+  // Power Control
+  CONSUMER_POWER                             = 0x0030,
+  CONSUMER_RESET                             = 0x0031,
+  CONSUMER_SLEEP                             = 0x0032,
+
+  // Screen Brightness
+  CONSUMER_BRIGHTNESS_INCREMENT              = 0x006F,
+  CONSUMER_BRIGHTNESS_DECREMENT              = 0x0070,
+
+  // These HID usages operate only on mobile systems (battery powered) and
+  // require Windows 8 (build 8302 or greater).
+  CONSUMER_WIRELESS_RADIO_CONTROLS           = 0x000C,
+  CONSUMER_WIRELESS_RADIO_BUTTONS            = 0x00C6,
+  CONSUMER_WIRELESS_RADIO_LED                = 0x00C7,
+  CONSUMER_WIRELESS_RADIO_SLIDER_SWITCH      = 0x00C8,
+
+  // Media Control
+  CONSUMER_PLAY_PAUSE                        = 0x00CD,
+  CONSUMER_SCAN_NEXT                         = 0x00B5,
+  CONSUMER_SCAN_PREVIOUS                     = 0x00B6,
+  CONSUMER_STOP                              = 0x00B7,
+  CONSUMER_VOLUME                            = 0x00E0,
+  CONSUMER_MUTE                              = 0x00E2,
+  CONSUMER_BASS                              = 0x00E3,
+  CONSUMER_TREBLE                            = 0x00E4,
+  CONSUMER_BASS_BOOST                        = 0x00E5,
+  CONSUMER_VOLUME_INCREMENT                  = 0x00E9,
+  CONSUMER_VOLUME_DECREMENT                  = 0x00EA,
+  CONSUMER_BASS_INCREMENT                    = 0x0152,
+  CONSUMER_BASS_DECREMENT                    = 0x0153,
+  CONSUMER_TREBLE_INCREMENT                  = 0x0154,
+  CONSUMER_TREBLE_DECREMENT                  = 0x0155,
+
+  // Application Launcher
+  CONSUMER_AL_CONSUMER_CONTROL_CONFIGURATION = 0x0183,
+  CONSUMER_AL_EMAIL_READER                   = 0x018A,
+  CONSUMER_AL_CALCULATOR                     = 0x0192,
+  CONSUMER_AL_LOCAL_BROWSER                  = 0x0194,
+
+  // Browser/Explorer Specific
+  CONSUMER_AC_SEARCH                         = 0x0221,
+  CONSUMER_AC_HOME                           = 0x0223,
+  CONSUMER_AC_BACK                           = 0x0224,
+  CONSUMER_AC_FORWARD                        = 0x0225,
+  CONSUMER_AC_STOP                           = 0x0226,
+  CONSUMER_AC_REFRESH                        = 0x0227,
+  CONSUMER_AC_BOOKMARKS                      = 0x022A,
+
+  // Mouse Horizontal scroll
+  CONSUMER_AC_PAN                            = 0x0238,
+};
+
+#define CON_MASK      0x8000
+#define KC_MPLY      (CON_MASK | CONSUMER_PLAY_PAUSE)
+#define KC_VOLU      (CON_MASK | CONSUMER_VOLUME_INCREMENT)
+#define KC_VOLD      (CON_MASK | CONSUMER_VOLUME_DECREMENT)
+#define KC_MSEL      (CON_MASK | CONSUMER_AL_CALCULATOR)
 
 #endif /* HID_KEYCODES_H */
 
