@@ -42,9 +42,6 @@ uint8_t monitoring_state = STATE_BOOT_INITIALIZE;
 // put your setup code here, to run once:
 /**************************************************************************************************************************/
 void setup() {
- Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
-
   LOG_LV1("BLEMIC","Starting %s" ,DEVICE_NAME);
 
   setupGpio();                                                                // checks that NFC functions on GPIOs are disabled.
@@ -116,26 +113,9 @@ void scanMatrix() {
 
         nrfx_coredep_delay_us(1);   // need for the GPIO lines to settle down electrically before reading.
 
-        #ifdef NRF52840_XXAA        // This is chip dependent and not on the board.  As such, we need this to also support the nrf52840 feather which remaps the numbers of the GPIOs to Pins numbers.
-          pindata0 = NRF_P0->IN;                                         // read all pins at once
-          pindata1 = NRF_P1->IN;                                         // read all pins at once
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            int ulPin = g_ADigitalPinMap[columns[i]];
-            if (ulPin<32)
-            {
-              KeyScanner::scanMatrix((pindata0>>(ulPin))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing 
-            } else
-            {
-              KeyScanner::scanMatrix((pindata1>>(ulPin-32))&1, timestamp, j, i);    // This function processes the logic values and does the debouncing 
-            }
-           // pinMode(columns[i], INPUT);                                     //'disables' the column that just got looped thru - no need to differentiate DIODE_DIRECTION and we can reset it
-          } 
-        #else
-          pindata0 = NRF_GPIO->IN;                                         // read all pins at once
-          for (int i = 0; i < MATRIX_COLS; ++i) {
-            KeyScanner::scanMatrix((pindata0>>(columns[i]))&1, timestamp, j, i);       // This function processes the logic values and does the debouncing
-          }
-        #endif
+        for (int i = 0; i < MATRIX_COLS; ++i) {
+            KeyScanner::scanMatrix(digitalRead(columns[i]), millis(), j, i);       // This function processes the logic values and does the debouncing
+        }
     pinMode(rows[j], INPUT);                                          //'disables' the row that was just scanned
    }                                                                  // done scanning the matrix
 

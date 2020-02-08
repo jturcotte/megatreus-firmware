@@ -98,17 +98,17 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 #endif
 
 #ifndef DEBOUNCETIME 
-#define DEBOUNCETIME 10
+#define DEBOUNCETIME 5
 #endif
 
 #ifndef HIDREPORTINGINTERVAL
-#define HIDREPORTINGINTERVAL 1
+#define HIDREPORTINGINTERVAL 5
 #endif
 
 // Battery Service definitions.
 
 #ifndef BLE_LIPO_MONITORING
-#define BLE_LIPO_MONITORING 0
+#define BLE_LIPO_MONITORING 1
 #endif
 
 
@@ -123,7 +123,7 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 
 #define PWM_TOUCH_INTERVAL 1000           // detection time since last keypress.
 
-#define VBAT_PIN          (A7)
+#define VBAT_PIN          (A6)
 #define VBAT_MV_PER_LSB   (0.73242188F)   // 3.0V ADC range and 12-bit ADC resolution = 3000mV/4096
 #ifdef ARDUINO_NRF52840_FEATHER           // these settings are specific to the NRF52840_FEATHER not the NRF52840 Chip.
   #define VBAT_DIVIDER      (0.5F)          // 150K + 150K voltage divider on VBAT

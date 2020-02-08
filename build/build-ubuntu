@@ -17,7 +17,7 @@ done
 shift $(($OPTIND - 1))
 boardParam=$1
 
-arduinoPath="/usr/share/arduino"
+arduinoPath="/home/$USER/bin/arduino-1.8.10/"
 arduinoDataPath=$(cd ~/.arduino15 & pwd)
 nrf52PackagePath="/home/$USER/.arduino15/packages/adafruit/hardware/nrf52"
 
@@ -54,9 +54,9 @@ arduino_compile() {
    keymapcppFile="$keyboardsPath/$keyboard/keymaps/$keymap/keymap.cpp"
    configFile="$keyboardsPath/$keyboard/$target/keyboard_config.h"
 
-   cp -f $keymapFile $sourcePath/
-#   cp -f $keymapcppFile $sourcePath/
-   cp -f $configFile $sourcePath/
+   cp --remove-destination $keymapFile $sourcePath/
+   cp --remove-destination $keymapcppFile $sourcePath/
+   cp --remove-destination $configFile $sourcePath/
 
    if $continueOnError; then
       set +e
