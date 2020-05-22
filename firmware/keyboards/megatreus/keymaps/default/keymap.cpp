@@ -17,13 +17,16 @@ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR P
 */
 #include "keymap.h"
 
+// Colemak's colon position
+#define MY_COLN MOD(MOD_LSHIFT, KC_P)
+
 std::array<std::array<Key, MATRIX_COLS>, MATRIX_ROWS> matrix =
     {KEYMAP(
-    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_GRV, \
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_LBRC, KC_RBRC, KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-    KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_BSLS, KC_QUOT, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_RCTL, \
+    KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_DEL, \
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_BSLS, KC_GRV,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+    KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_ENT,  KC_ENT,  KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_RCTL, \
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, \
-    KC_LALT, KC_RALT, KC_LGUI, LAYER_1, KC_ENT,                                      KC_SPC,  KC_LEFT, KC_UP,   KC_RGHT, LAYER_1, \
+    KC_LALT, KC_RALT, LAYER_2, LAYER_1, KC_LGUI,                                     KC_SPC,  KC_LEFT, KC_UP,   KC_RGHT, LAYER_1, \
                                                                                                        KC_DOWN \
     )};
 
@@ -31,12 +34,22 @@ void setupKeymap() {
 
     uint32_t layer1[MATRIX_ROWS][MATRIX_COLS] =
     KEYMAP(
-    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,  \
-    _______, KC_PGUP, _______, _______, _______, _______, _______, _______, _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,   _______, \
-    _______, KC_PGDN, KC_LEFT, KC_UP,   KC_RGHT, KC_DEL,  KC_SPC,  _______, _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______, \
-    _______, _______, KC_HOME, KC_DOWN, KC_END,  KC_BSPC,                   _______, _______, KC_VOLD, KC_VOLU, KC_MPLY, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS, _______, \
+    _______, KC_PGUP, KC_VOLD, KC_MPLY, KC_VOLU, _______, _______, _______, _______, KC_DQUO, KC_LCBR, KC_RCBR, MY_COLN, _______, \
+    _______, KC_PGDN, KC_LEFT, KC_UP,   KC_RGHT, KC_DEL,  KC_SPC,  _______, _______, KC_QUOT, KC_LBRC, KC_RBRC, _______, _______, \
+    _______, _______, KC_HOME, KC_DOWN, KC_END,  KC_BSPC,                   _______, _______, KC_LT,   KC_GT,   KC_QUES, _______, \
     _______, _______, _______, _______, _______,                                     _______, KC_HOME, KC_PGUP, KC_END,  _______, \
                                                                                                        KC_PGDN \
+    );
+
+    uint32_t layer2[MATRIX_ROWS][MATRIX_COLS] =
+    KEYMAP(
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,   _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   _______,                   _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, \
+                                                                                                       _______ \
     );
 
     /*
@@ -47,6 +60,7 @@ void setupKeymap() {
         for (int col = 0; col < MATRIX_COLS; ++col)
         {
             matrix[row][col].addActivation(_L1, Method::PRESS, layer1[row][col]);
+            matrix[row][col].addActivation(_L2, Method::PRESS, layer2[row][col]);
         }
     }
 
